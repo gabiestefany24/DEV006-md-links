@@ -1,81 +1,73 @@
-const fs = require('fs');
-const path = require('path');
-const axios = require('axios');
+const fs = require("fs");
+const path = require("path");
+const axios = require("axios");
 
-const filePath = './lib/prueba.md';
 
-// //validar absoluta true o false 
-// const validarAbsoluta = (filePath) => {
-//   const isAbsolute = path.isAbsolute(filePath);
-//   if (!isAbsolute){
-//     //  console.log('Es una ruta relativa');
-//   }
-//   return filePath;
-// }
-// // validarAbsoluta(filePath);
+
+
+//resolver relativa a absoluta
+
+const pathAbsoluta = (filePath) => {
+  let resolvedPath = filePath; // Variable local para almacenar el valor resuelto
+
+  if (!path.isAbsolute(filePath)) {
+    resolvedPath = path.resolve(filePath); // Asignar el valor resuelto a la variable local
+  }
+
+  return resolvedPath; // Devolver la variable local
+};
+
 
 //validar ruta existe
 const pathExist = (resolveAbsolute) => {
   return fs.existsSync(resolveAbsolute);
-}
-
-//resolver relativa a absoluta
-const pathAbsoluta = (filePath) => {
-  if (!path.isAbsolute(filePath)){
-    filePath = path.resolve(filePath);
-  } return filePath
-}
-// pathAbsoluta(filePath);
+};
 
 
 //leer los archivos de un directorio
-const directorio = './lib'
 
-const readDirectory = (directorio) => {// cambiar nombre
+
+const readDirectory = (directorio) => {
+  // cambiar nombre
   const archivos = [];
-  if( fs.statSync(directorio).isDirectory()){
+  if (fs.statSync(directorio).isDirectory()) {
     const directory = fs.readdirSync(directorio);
-    directory.forEach(file => {
-      // console.log(file); 
-      const rutaCompleta = path.join(directorio, file)
-      if(fs.statSync(rutaCompleta).isDirectory()){
-        const subdirectory = readDirectory(rutaCompleta);//Recursividad de directorio
-        archivos.push(...subdirectory)
-         } else if (path.extname(rutaCompleta) === '.md'){
-          archivos.push(rutaCompleta)
-        }
-    })
-  } else {
-    const  extension = path.extname(directorio);
-    if(extension === '.md'){
-      archivos.push(directorio)
-    }
-  }    
-return archivos
-}
-// readDirectory(directorio);
-
-//leer un archivo 
-const readFile = (filePath) => {
-  return new Promise((resolve, reject) => {
-    // archivos.forEach(archivo =>{
-    fs.readFile(filePath, 'utf8', (error, data) => {
-
-      if (error) {
-        reject(error)       
-        
-      } else {
-          // crear objeto(path, file) 
-        resolve({
-          path: filePath,
-          file:data.toString()
-        });
-                
+    directory.forEach((file) => {
+      // console.log(file);
+      const rutaCompleta = path.join(directorio, file);
+      if (fs.statSync(rutaCompleta).isDirectory()) {
+        const subdirectory = readDirectory(rutaCompleta); //Recursividad de directorio
+        archivos.push(...subdirectory);
+      } else if (path.extname(rutaCompleta) === ".md") {
+        archivos.push(rutaCompleta);
       }
-    })   
-    
-  })
-}
+    });
+  } else {
+    const extension = path.extname(directorio);
+    if (extension === ".md") {
+      archivos.push(directorio);
+    }
+  }
+  return archivos;
+};
+
+
+//leer un archivo
+const readFile = (resolvedPath) => {
+  return new Promise((resolve, reject) => {
+      fs.readFile(resolvedPath, "utf8", (error, data) => {
+      if (error) {
+        reject(error);
+      } else {
+        // crear objeto(path, file)
+        resolve({
+          path: resolvedPath,
+          file: data.toString(),
+        });
+      }
+    });
+  });
+};
 //expresiones regulares texto y url
 // Extraer links de archivo
 
@@ -85,112 +77,71 @@ const getLinks = (data, file) => {
   let links = [];
 
   for (const match of matches) {
-    const [, text, url] = match; 
-    links.push({ file, text, url });
+    const [, text, href] = match;
+    links.push({ file, text, href });
   }
   if (links.length === 0) {
-    links.push('No links found')
+    links.push("No links found");
   }
-  // console.log('Listado: ', links)
-  return links
-}
-
-const linksToString = (links) => {
-  if (links.length === 0) {
-    return 'No links found';
-  }
-
-  const linkStrings = links.map((link) => `href: ${link.url}\ntext: ${link.text}\n\n`);
-  return linkStrings.join('');
+  return links 
+  // return links;
 };
-
-//validate: false
-function getLinkInfo(links, filePath) {
-  const linkInfo = links.map((link) => ({
-    href: link.url,
-    text: link.text,
-    file: filePath,
-  }));
-
-  return linkInfo;
-}
-
-// const requestHttp = (links) => {
-//   const linkPromises = links.map((link) => {
-//     const url = link.url;
-//     return axios
-//       .get(url, {
-//         headers: { "Accept-Encoding": "gzip,deflate,compress" },
-//       })
-//       .then((response) => ({
-//         href: url,
-//         text: link.text,
-//         file: filePath,
-//         status: response.status,
-//         message: response.status >= 200 && response.status < 300 ? 'ok' : 'fail',
-//       }))
-//       .catch((error) => {
-//         if(error.code === 'ECONNREFUSED'){
-//           return {
-//             href: url,
-//             text: link.text,
-//             file: filePath,
-//             status: 0,
-//             message: 'Connection Refused',
-//           };
-
-//         } else {
-//           throw error; 
-//         }
-
-        
-//          //Devolver el error como una promesa rechazada
-//       });
-//   });
-//   return Promise.all(linkPromises)
-// };
 
 const requestHttp = (links) => {
   const linkPromises = links.map((link) => {
-    const url = link.url;
+
     return axios
-      .get(url, {
-        headers: { "Accept-Encoding": "gzip,deflate,compress" },
-      })
+      .get(link.href)
       .then((response) => ({
-        href: url,
+        href: link.href,
         text: link.text,
-        file: filePath,
+        file: link.file,
         status: response.status,
-        message: (response.status >= 200 && response.status < 300) ? 'ok' : 'fail',
+        message:
+          response.status >= 200 && response.status < 300 ? "ok" : "fail",
       }))
       .catch((error) => {
-        return error; //Devolver el error como una promesa rechazada
+        const catchError = {
+          href:link.href,
+          text: link.text,
+          file: link.file,
+          status: error.response.status,
+          message:
+            error.response.status >= 200 && error.response.status < 300
+              ? "ok"
+              : "fail",
+        };
+        return catchError; //Devolver el error como una promesa rechazada
       });
   });
-  return Promise.all(linkPromises)
+  return Promise.all(linkPromises);
+};
+
+const uniqueLinks = (links) => {
+  const uniqueLinksSet = new Set();
+
+  links.forEach((link) => {
+    if (!uniqueLinksSet.has(link)) {
+      uniqueLinksSet.add(link);
+    }
+  });
+
+  return Array.from(uniqueLinksSet);
+};
+
+const countBrokenLinks = (links) => {
+  let brokenLinkCount = 0;
+
+  links.forEach((link) => {
+    if (link.message === "fail") {
+      brokenLinkCount++;
+    }
+  });
+
+  return brokenLinkCount;
 };
 
 
-// const requestHttp = (links) => {
-//   const linkPromises = links.map((link) => {
-//     const url = link.match(/\(([^()]*)\)/)[1];
-//     return axios
-//       .get(url)
-//       .then((response) => ({
-//         href: url,
-//         text: link.match(/\[([^[\]]*)\]/)[1],
-//         file: filePath,
-//         status: response.status,
-//         message: response.status >= 200 && response.status < 300 ? 'ok' : 'fail',
-//       }))
-//       .catch((error) => {
-//         return error; //Devolver el error como una promesa rechazada
-//       });
-//   });
-//   return Promise.all(linkPromises)
-// };
-          
 
 //exportar funciones
 module.exports = {
@@ -199,8 +150,7 @@ module.exports = {
   readDirectory,
   readFile,
   getLinks,
-  linksToString,
-  getLinkInfo,
   requestHttp,
-}
-
+  uniqueLinks,
+  countBrokenLinks
+};

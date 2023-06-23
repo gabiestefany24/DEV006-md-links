@@ -1,13 +1,10 @@
 const {
-  //validarAbsoluta,
   pathExist,
   pathAbsoluta,
   readDirectory,
   readFile,
   getLinks,
-  getLinkInfo,
-  requestHttp,
-  //linksToString,
+  requestHttp,  
 } = require("./functions");
 
 //función mdLinks con parámetros path y option
@@ -36,26 +33,28 @@ module.exports = function mdLinks(path, options) {
           return readFile(file)
             .then((archivos) => {
               // cambiar a archivo(un archivo)
-              //console.log(archivos);
+              // console.log(archivos, 'ARCHIVOS');
               if (archivos) {
                 //extraer links
                 const obtenerLinks = getLinks(archivos.file, archivos.path);
                 // const linksAsString = linksToString(links)
-                //console.log(obtenerLinks, 'HASTA AQUI OBTENERLINKS');
+                // console.log(obtenerLinks, 'HASTA AQUI OBTENERLINKS');
                 return obtenerLinks; //devolver los enlaces obtenidos
+                // console.log(obtenerLinks, 'ESTO ES OBTENERLINKS')
               }
             })
             .catch((error) => {
               reject(error);
             });
         });
-        //console.log(enlacesPromises, 'hola soy yo')
 
         Promise.all(enlacesPromises).then((enlaces) => {
+          // console.log(enlaces, 'ENLACES')
           //definir constante con aplanar el array
           const arrayAplanar = enlaces.flat()
           // console.log(enlaces.flat())
-          if (validateOption) {
+          if (options.validate) {
+            // console.log(arrayAplanar, 'ARRAY')
             resolve(requestHttp(arrayAplanar));
           } else {
             resolve(arrayAplanar);
