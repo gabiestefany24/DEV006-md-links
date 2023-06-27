@@ -18,11 +18,13 @@
     "lib": "lib",
     "test": "test"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "npm test"
+  "devDependencies": {
+    "jest": "^29.5.0"
   },
-  "bin":{
+  "scripts": {
+    "test":  "jest --coverage"
+  },
+  "bin": {
     "md-links": "./cli.js"
   },
   "repository": {

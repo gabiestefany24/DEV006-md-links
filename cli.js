@@ -1,15 +1,12 @@
 #!/usr/bin/env node
 const mdLinks = require("./index.js");
 const { uniqueLinks, countBrokenLinks } = require("./functions.js");
-const pathCli = process.argv[2];
+
+let pathCli = process.argv[2];
 let optionsValidate = process.argv.includes("--validate");
 let optionsStats = process.argv.includes("--stats");
 
-//const [,, ...args] = process.argv
-//console.log(`Hello World ${args}`)
 
-// mdLinks(pathCli, options)
-//   .then((links) => {
 if (optionsValidate && !optionsStats) {
   mdLinks(pathCli, { validate: true })
     .then((links) => {
@@ -55,15 +52,13 @@ if (optionsValidate && !optionsStats) {
   mdLinks(pathCli, false)
     .then((links) => {
       links.forEach((link) => {
-        console.log(`${link.href}`, "holaaaaa");
+        console.log(`${link.file} ${link.href} ${link.text}`);
       });
-      // return links;
+      return links;
+      // console.log(links)
     })
     .catch((error) => {
       console.log(error, "Este es el error de sin options");
     });
 }
-// })
-// .catch((error) => {
-//   console.log(error, "Este es el error en CLI");
-// });
+

@@ -1,15 +1,14 @@
 const {
   pathExist,
   pathAbsoluta,
-  readDirectory,
+  // readDirectory,
+  readContent,
   readFile,
   getLinks,
   requestHttp,  
 } = require("./functions");
 
 //función mdLinks con parámetros path y option
-//path: relativa o absoluta
-//option: objeto con propiedad validate(false or true)
 module.exports = function mdLinks(path, options) {
   return new Promise((resolve, reject) => {
     if (!path) {
@@ -17,27 +16,22 @@ module.exports = function mdLinks(path, options) {
     } else {
       //path absolute
       const absoluta = pathAbsoluta(path);
-      //console.log(absoluta); //agregar texto para diferenciar
       const validateOption = options.validate
-      //const validateOption = false
-      //console.log(validateOption, 'Options');
       //path existe
       const exists = pathExist(absoluta);
-      //console.log(exists);
-      if (exists) {
+        if (exists) {
         //leer directorio
-        const archivos = readDirectory(absoluta);
+        // const archivos = readDirectory(absoluta);
+        const archivos = readContent(absoluta);
         //console.log(archivos);
         //leer archivo md y obtener enlaces
         const enlacesPromises = archivos.map((file) => {
           return readFile(file)
             .then((archivos) => {
-              // cambiar a archivo(un archivo)
-              // console.log(archivos, 'ARCHIVOS');
+              //console.log(archivos, 'ARCHIVOS');
               if (archivos) {
                 //extraer links
                 const obtenerLinks = getLinks(archivos.file, archivos.path);
-                // const linksAsString = linksToString(links)
                 // console.log(obtenerLinks, 'HASTA AQUI OBTENERLINKS');
                 return obtenerLinks; //devolver los enlaces obtenidos
                 // console.log(obtenerLinks, 'ESTO ES OBTENERLINKS')
