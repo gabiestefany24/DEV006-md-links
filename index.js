@@ -2,7 +2,6 @@ const {
   pathExist,
   pathAbsoluta,
   readDirectory,
-  // readContent,
   readFile,
   getLinks,
   requestHttp,  

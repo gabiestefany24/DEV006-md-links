@@ -51,30 +51,6 @@ const readDirectory = (directorio) => {
   return archivos;
 };
 
-// const readContent = (content) => {
-//   // cambiar nombre
-//   const archivos = [];
-//   if (fs.statSync(content).isDirectory()) {
-//     const directory = fs.readdirSync(content);
-//     directory.forEach((file) => {//archivo o directorio
-//       // console.log(file);
-//       const rutaCompleta = path.join(content, file);//concatena el nombre del directorio actual con el nombre del archivo o subdirectorio para formar la ruta completa
-//       if (fs.statSync(rutaCompleta).isDirectory()) {
-//         const subdirectory = readContent(rutaCompleta); //Recursividad de directorio
-//         archivos.push(...subdirectory);
-//       } else if (path.extname(rutaCompleta) === ".md") {
-//         archivos.push(rutaCompleta);
-//       }
-//     });
-//   } else {
-//     const extension = path.extname(content);
-//     if (extension === ".md") {
-//       archivos.push(content);
-//     }
-//   }
-//   return archivos;
-// };
-
 
 
 //leer un archivo
@@ -106,24 +82,10 @@ const getLinks = (data, file) => {
     links.push({ file, text, href });
   }
 
-  
-  // //   // links.push({
-  // //   //   file,
-  // //   //   text: "No links found",
-  // //   //   href: ""
-  // //   // });    
-  
   //console.log(links)
   return links;
 };
 
-// readFile('C:\\Laboratoria\\Proyecto4\\lib\\pruebacarpeta\\tercerdirectorio\\gabriela.md')
-//   .then(result => {
-//     console.log(result)
-//   }) 
-//   .catch(error => {
-//     console.error(error)
-//   })
 
 const requestHttp = (links) => {
   
@@ -139,7 +101,7 @@ const requestHttp = (links) => {
         file: link.file,
         status: response.status,
         message: 'ok'
-        // response.status >= 200 && response.status < 300 ? "ok" : "fail",
+        
       })
       )
       .catch((error) => ( {
@@ -151,12 +113,7 @@ const requestHttp = (links) => {
           file: link.file,
           status: error.response.status,
           message: 'fail'
-            // error.response.status >= 200 && error.response.status < 300
-            //   ? "ok"
-            //   : "fail",
-        
-        //  return catchError; //Devolver el error como una promesa rechazada
-        // return Promise.reject(catchError); 
+                 
       }));
    
   });
@@ -193,7 +150,6 @@ const countBrokenLinks = (links) => {
 module.exports = {
   pathAbsoluta,
   pathExist,
-  // readContent,
   readDirectory,
   readFile,
   getLinks,
