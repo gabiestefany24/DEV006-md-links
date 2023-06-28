@@ -27,53 +27,53 @@ const pathExist = (resolveAbsolute) => {
 //leer los archivos de un directorio
 
 
-// const readDirectory = (directorio) => {
-//   // cambiar nombre
-//   const archivos = [];
-//   if (fs.statSync(directorio).isDirectory()) {
-//     const directory = fs.readdirSync(directorio);
-//     directory.forEach((file) => {//archivo o directorio
-//       // console.log(file);
-//       const rutaCompleta = path.join(directorio, file);//concatena el nombre del directorio actual con el nombre del archivo o subdirectorio para formar la ruta completa
-//       if (fs.statSync(rutaCompleta).isDirectory()) {
-//         const subdirectory = readDirectory(rutaCompleta); //Recursividad de directorio
-//         archivos.push(...subdirectory);
-//       } else if (path.extname(rutaCompleta) === ".md") {
-//         archivos.push(rutaCompleta);
-//       }
-//     });
-//   } else {
-//     const extension = path.extname(directorio);
-//     if (extension === ".md") {
-//       archivos.push(directorio);
-//     }
-//   }
-//   return archivos;
-// };
-
-const readContent = (content) => {
+const readDirectory = (directorio) => {
   // cambiar nombre
   const archivos = [];
-  if (fs.statSync(content).isDirectory()) {
-    const directory = fs.readdirSync(content);
+  if (fs.statSync(directorio).isDirectory()) {
+    const directory = fs.readdirSync(directorio);
     directory.forEach((file) => {//archivo o directorio
       // console.log(file);
-      const rutaCompleta = path.join(content, file);//concatena el nombre del directorio actual con el nombre del archivo o subdirectorio para formar la ruta completa
+      const rutaCompleta = path.join(directorio, file);//concatena el nombre del directorio actual con el nombre del archivo o subdirectorio para formar la ruta completa
       if (fs.statSync(rutaCompleta).isDirectory()) {
-        const subdirectory = readContent(rutaCompleta); //Recursividad de directorio
+        const subdirectory = readDirectory(rutaCompleta); //Recursividad de directorio
         archivos.push(...subdirectory);
       } else if (path.extname(rutaCompleta) === ".md") {
         archivos.push(rutaCompleta);
       }
     });
   } else {
-    const extension = path.extname(content);
+    const extension = path.extname(directorio);
     if (extension === ".md") {
-      archivos.push(content);
+      archivos.push(directorio);
     }
   }
   return archivos;
 };
+
+// const readContent = (content) => {
+//   // cambiar nombre
+//   const archivos = [];
+//   if (fs.statSync(content).isDirectory()) {
+//     const directory = fs.readdirSync(content);
+//     directory.forEach((file) => {//archivo o directorio
+//       // console.log(file);
+//       const rutaCompleta = path.join(content, file);//concatena el nombre del directorio actual con el nombre del archivo o subdirectorio para formar la ruta completa
+//       if (fs.statSync(rutaCompleta).isDirectory()) {
+//         const subdirectory = readContent(rutaCompleta); //Recursividad de directorio
+//         archivos.push(...subdirectory);
+//       } else if (path.extname(rutaCompleta) === ".md") {
+//         archivos.push(rutaCompleta);
+//       }
+//     });
+//   } else {
+//     const extension = path.extname(content);
+//     if (extension === ".md") {
+//       archivos.push(content);
+//     }
+//   }
+//   return archivos;
+// };
 
 
 
@@ -106,45 +106,58 @@ const getLinks = (data, file) => {
     links.push({ file, text, href });
   }
 
-  if (links.length === 0) {
-    links.push({
-      file,
-      text: "No links found",
-      href: ""
-    });    
-  }
-
+  
+  // //   // links.push({
+  // //   //   file,
+  // //   //   text: "No links found",
+  // //   //   href: ""
+  // //   // });    
+  
+  //console.log(links)
   return links;
 };
+
+// readFile('C:\\Laboratoria\\Proyecto4\\lib\\pruebacarpeta\\tercerdirectorio\\gabriela.md')
+//   .then(result => {
+//     console.log(result)
+//   }) 
+//   .catch(error => {
+//     console.error(error)
+//   })
 
 const requestHttp = (links) => {
   
   const linkPromises = links.map((link) => {
-   
+  //  console.log(link)
     return axios
       .get(link.href)
-      .then((response) => ({
+      .then((response) => 
+      
+      ({
         href: link.href,
         text: link.text,
         file: link.file,
         status: response.status,
-        message:
-          response.status >= 200 && response.status < 300 ? "ok" : "fail",
-      }))
-      .catch((error) => {
-        const catchError = {
+        message: 'ok'
+        // response.status >= 200 && response.status < 300 ? "ok" : "fail",
+      })
+      )
+      .catch((error) => ( {
+        // console.log(error.response.statusCode)
+        // console.log(error.status)
+         
           href:link.href,
           text: link.text,
           file: link.file,
           status: error.response.status,
-          message:
-            error.response.status >= 200 && error.response.status < 300
-              ? "ok"
-              : "fail",
-        };
-        // return catchError; //Devolver el error como una promesa rechazada
-        return Promise.reject(catchError); 
-      });
+          message: 'fail'
+            // error.response.status >= 200 && error.response.status < 300
+            //   ? "ok"
+            //   : "fail",
+        
+        //  return catchError; //Devolver el error como una promesa rechazada
+        // return Promise.reject(catchError); 
+      }));
    
   });
   return Promise.all(linkPromises);
@@ -180,8 +193,8 @@ const countBrokenLinks = (links) => {
 module.exports = {
   pathAbsoluta,
   pathExist,
-  readContent,
-  // readDirectory,
+  // readContent,
+  readDirectory,
   readFile,
   getLinks,
   requestHttp,

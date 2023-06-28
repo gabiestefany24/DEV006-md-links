@@ -1,8 +1,8 @@
 const {
   pathExist,
   pathAbsoluta,
-  // readDirectory,
-  readContent,
+  readDirectory,
+  // readContent,
   readFile,
   getLinks,
   requestHttp,  
@@ -21,8 +21,8 @@ module.exports = function mdLinks(path, options) {
       const exists = pathExist(absoluta);
         if (exists) {
         //leer directorio
-        // const archivos = readDirectory(absoluta);
-        const archivos = readContent(absoluta);
+        const archivos = readDirectory(absoluta);
+        // const archivos = readContent(absoluta);
         //console.log(archivos);
         //leer archivo md y obtener enlaces
         const enlacesPromises = archivos.map((file) => {
@@ -46,12 +46,13 @@ module.exports = function mdLinks(path, options) {
           // console.log(enlaces, 'ENLACES')
           //definir constante con aplanar el array
           const arrayAplanar = enlaces.flat()
-          // console.log(enlaces.flat())
+          // console.log(arrayAplanar, 'ARRAY')
           if (options.validate) {
-            // console.log(arrayAplanar, 'ARRAY')
+          
             resolve(requestHttp(arrayAplanar));
           } else {
             resolve(arrayAplanar);
+            // console.log(arrayAplanar, 'esto es aplanar')
           }
         });
       } else {
@@ -60,3 +61,5 @@ module.exports = function mdLinks(path, options) {
     }
   });
 };
+
+

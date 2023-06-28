@@ -10,12 +10,16 @@ let optionsStats = process.argv.includes("--stats");
 if (optionsValidate && !optionsStats) {
   mdLinks(pathCli, { validate: true })
     .then((links) => {
+      if (links.length === 0) {
+        console.log('No se encuentran links') 
+      }
       links.forEach((link) => {
         console.log(
           `${link.file} ${link.href} ${link.message} ${link.status} ${link.text}`
         );
       });
-      return links;
+      //return links;
+      //console.log(links, 'ESTO ES LINKS DE VALIDATE')
     })
     .catch((error) => {
       console.log(error, "Este es el error de --validate");
@@ -23,6 +27,9 @@ if (optionsValidate && !optionsStats) {
 } else if (!optionsValidate && optionsStats) {
   mdLinks(pathCli, { stats: true })
     .then((links) => {
+      if (links.length === 0) {
+        console.log('No se encuentran links') 
+      }
       const linksArray = Array.from(links);
       console.log("Total: ", links.length, "Únicos: ", linksArray.length);
       return links;
@@ -33,6 +40,9 @@ if (optionsValidate && !optionsStats) {
 } else if (optionsValidate && optionsStats) {
   mdLinks(pathCli, { stats: true, validate: true })
     .then((links) => {
+      if (links.length === 0) {
+        console.log('No se encuentran links') 
+      }
       const brokenLinkCount = countBrokenLinks(links);
       const linksArray = Array.from(links);
       console.log(
@@ -51,6 +61,9 @@ if (optionsValidate && !optionsStats) {
 } else if (!optionsValidate && !optionsStats) {
   mdLinks(pathCli, false)
     .then((links) => {
+      if (links.length === 0) {
+        console.log('No se encuentran links') 
+      }
       links.forEach((link) => {
         console.log(`${link.file} ${link.href} ${link.text}`);
       });

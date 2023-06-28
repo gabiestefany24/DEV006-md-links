@@ -10,11 +10,11 @@
 
 ## 1. Descripción
 
-El proyecto md-Links esta enfocado en la creación de un libreria en JavaScript y línea de comando (CLI), desarrollados para analizar archivos en formato Markdown, extraer los links que contienen y con esto contabilizar algunos datos como el total de links, links únicos y rotos.
+El proyecto md-Links esta enfocado en la creación de una libreria en JavaScript y línea de comando (CLI), desarrollados para analizar archivos en formato Markdown, extraer los links que contienen y con esto contabilizar algunos datos como el total de links, links únicos y rotos.
 
 Esta herramienta se creó usando Node.js filesystem y Axios. Por medio de [Diagramas de flujo](https://drive.google.com/file/d/1CYSx3gwyJiXIfdOtjMtlqnK5zKRVT3X3/view?usp=sharing) se estudió el proceso tanto para la libreria como de la CLI
 
-## 2. Instalación y uso
+## 2. Instalación y usos
 
 ## Instalación
 
@@ -24,7 +24,7 @@ Utilizar en la **terminal** el comando
 npm install md-links-gabiestefany24
 ```
 
-### Uso de la libreria en JavaScript 
+## Uso de la libreria en JavaScript 
 
 #### `mdLinks(path, options)`
 
@@ -75,7 +75,7 @@ mdLinks("./some/dir")
   .catch(console.error);
 ```
 
-### Uso de la línea de comando (CLI)
+## Uso de la línea de comando (CLI)
 
 Puede ejecutarse en la **terminal**:
 

@@ -1,6 +1,6 @@
 // const mdLinks = require("./index.js");
 
-// mdLinks("./lib/pruebacarpeta/tercerdirectorio/gabriela.md", { validate: true })
+// mdLinks("./lib/pruebacarpeta", { validate: true})
 //   .then((results) => {
 //     console.log(results, "resultados");
 //   })
