@@ -46,7 +46,7 @@ module.exports = function mdLinks(path, options) {
           //definir constante con aplanar el array
           const arrayAplanar = enlaces.flat()
           // console.log(arrayAplanar, 'ARRAY')
-          if (options.validate) {
+          if (validateOption) {
           
             resolve(requestHttp(arrayAplanar));
           } else {

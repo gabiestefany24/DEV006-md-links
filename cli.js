@@ -18,7 +18,7 @@ if (optionsValidate && !optionsStats) {
           `${link.file} ${link.href} ${link.message} ${link.status} ${link.text}`
         );
       });
-      //return links;
+      return links;
       //console.log(links, 'ESTO ES LINKS DE VALIDATE')
     })
     .catch((error) => {
@@ -30,8 +30,8 @@ if (optionsValidate && !optionsStats) {
       if (links.length === 0) {
         console.log('No se encuentran links') 
       }
-      const linksArray = Array.from(links);
-      console.log("Total: ", links.length, "Únicos: ", linksArray.length);
+      const uniqueLinksArray = uniqueLinks(links);;
+      console.log("Total: ", links.length, "Únicos: ", uniqueLinksArray.length);
       return links;
     })
     .catch((error) => {
@@ -44,12 +44,12 @@ if (optionsValidate && !optionsStats) {
         console.log('No se encuentran links') 
       }
       const brokenLinkCount = countBrokenLinks(links);
-      const linksArray = Array.from(links);
+      const uniqueLinksArray = uniqueLinks(links);
       console.log(
         "Total: ",
         links.length,
         "Únicos: ",
-        linksArray.length,
+        uniqueLinksArray.length,
         "Broken: ",
         brokenLinkCount
       );

@@ -41,7 +41,7 @@ describe('readDirectory', () => {
 
 
   test('devuelve un array con la ruta completa del archivo .md', () => {
-    const archivoMd = './directorio/archivo.md';
+    const archivoMd = '../lib/prueba.md';
     jest.spyOn(fs, 'statSync').mockReturnValueOnce({ isDirectory: () => false });
     jest.spyOn(path, 'extname').mockReturnValueOnce('.md');
     expect(readDirectory(archivoMd)).toEqual([archivoMd]);
@@ -52,12 +52,12 @@ describe('readDirectory', () => {
 describe("readFile", () => {
   const resolvedPath = "../lib/prueba.md";
 
-  it("debe devolver una promesa", () => {
+  test("debe devolver una promesa", () => {
     const result = readFile(resolvedPath);
     expect(result).toBeInstanceOf(Promise);
   });
 
-  it("debe resolver con un objeto que contiene la ruta y el contenido del archivo", () => {
+  test("debe resolver con un objeto que contiene la ruta y el contenido del archivo", () => {
     return expect(readFile(resolvedPath)).resolves.toEqual({
       path: resolvedPath,
       file: expect.any(String),
@@ -66,7 +66,7 @@ describe("readFile", () => {
 });
 
 describe("getLinks", () => {
-  it("debe retornar un array de objetos con los links encontrados", () => {
+  test("debe retornar un array de objetos con los links encontrados", () => {
     const data =
       "[link](https://docs.google.com/spreadsheets/d/1oleVJ6QXGO6nWxLqlm9dOEzc_geahDo2ZjJe8o_kXHo/edit#gid=1167361173)";
     const file = "../lib/pruebacarpeta/tercerdirectorio/gabriela.md";
@@ -128,7 +128,11 @@ describe("countBrokenLinks", () => {
   });
 
   test("devuelve 0 si no hay enlaces rotos", () => {
-    const links = [{ message: "ok" }, { message: "ok" }, { message: "ok" }];
+    const links = [
+      { message: "ok" }, 
+      { message: "ok" }, 
+      { message: "ok" }
+    ];
 
     const brokenLinkCount = countBrokenLinks(links);
 
@@ -139,7 +143,7 @@ describe("countBrokenLinks", () => {
 describe("mdLinks", () => {
 
   test('debe lanzar un error si no se proporciona una ruta', () => {
-    expect.assertions(1); // Asegura que se llame a una cantidad específica de aserciones dentro de la prueba
+   
 
     return expect(mdLinks()).rejects.toMatch('Debe agregar una ruta');
   });

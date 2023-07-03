@@ -21,7 +21,7 @@ Esta herramienta se creó usando Node.js filesystem y Axios. Por medio de [Diagr
 Utilizar en la **terminal** el comando
 
 ```sh
-npm install md-links-gabiestefany24
+npm i md-links-gabiestefany24
 ```
 
 ## Uso de la libreria en JavaScript 
